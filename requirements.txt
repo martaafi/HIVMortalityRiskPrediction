@@ -1,0 +1,25 @@
+# Core
+streamlit>=1.30
+scikit-learn==1.6.1
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+
+# ML Models & Tools
+xgboost
+lightgbm
+catboost
+
+# Imbalanced data
+imbalanced-learn
+
+# Explainability
+lime
+
+# Optional: Streamlit components (jika kamu pakai)
+streamlit-components
+
+# Avoid version mismatch
+scipy>=1.10
