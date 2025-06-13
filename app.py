@@ -251,37 +251,27 @@ for ax in axes[len(models):]:
     ax.axis('off')
 st.pyplot(fig)
 
-# 7. UMAP Decision Boundary (pengganti t-SNE)
-import umap  # pastikan umap-learn ada di requirements.txt
-
-st.subheader("🔍 UMAP Decision Boundary (Recall annotated)")
-
-# Fit semua model dulu
+# 7. t-SNE Decision Boundary
+st.subheader("🔍 t‑SNE Decision Boundary (Recall annotated)")
 for m in models:
     m.fit(X_res, y_res)
+X_tsne = TSNE(n_components=2, random_state=42).fit_transform(X_test)
 
-# Gunakan UMAP untuk transformasi dimensi
-X_umap = umap.UMAP(n_components=2, random_state=42).fit_transform(X_test)
-
-# Buat grid untuk decision boundary
 grid_h = 0.5
-x_min, x_max = X_umap[:, 0].min() - 1, X_umap[:, 0].max() + 1
-y_min, y_max = X_umap[:, 1].min() - 1, X_umap[:, 1].max() + 1
+x_min, x_max = X_tsne[:, 0].min() - 1, X_tsne[:, 0].max() + 1
+y_min, y_max = X_tsne[:, 1].min() - 1, X_tsne[:, 1].max() + 1
 xx, yy = np.meshgrid(np.arange(x_min, x_max, grid_h),
                      np.arange(y_min, y_max, grid_h))
-
-# Buat cKDTree dari hasil UMAP untuk mempercepat mapping ke grid
-tree = cKDTree(X_umap)
+tree = cKDTree(X_tsne)
 _, idx = tree.query(np.c_[xx.ravel(), yy.ravel()])
 
-# Pilihan warna
 colormaps = [
-    ListedColormap(["#cc0000", "#0000cc"]),
-    ListedColormap(["#990000", "#000099"]),
-    ListedColormap(["#800000", "#000080"]),
+    ListedColormap(["#cc0000", "#0000cc"]),  # Dark Red & Dark Blue
+    ListedColormap(["#990000", "#000099"]),  # Deeper Red & Navy
+    ListedColormap(["#800000", "#000080"]),  # Maroon & Dark Blue
+
 ]
 
-# Visualisasi tiap model
 for i, m in enumerate(models):
     preds = m.predict(X_test.iloc[idx])
     Z = preds.reshape(xx.shape)
@@ -289,11 +279,11 @@ for i, m in enumerate(models):
 
     fig, ax = plt.subplots(figsize=(6, 5))
     ax.contourf(xx, yy, Z, alpha=0.3, cmap=colormaps[i])
-    ax.scatter(*X_umap[y_test == 0].T, c='red', label='Low risk', s=15, alpha=0.6)
-    ax.scatter(*X_umap[y_test == 1].T, c='blue', label='High risk', s=15, alpha=0.6)
+    ax.scatter(*X_tsne[y_test == 0].T, c='red', label='Low risk', s=15, alpha=0.6)
+    ax.scatter(*X_tsne[y_test == 1].T, c='blue', label='High risk', s=15, alpha=0.6)
     ax.set_title(f"{type(m).__name__} (Recall: {recall:.2f})")
-    ax.set_xlabel("UMAP 1")
-    ax.set_ylabel("UMAP 2")
+    ax.set_xlabel("t‑SNE 1")
+    ax.set_ylabel("t‑SNE 2")
     ax.legend()
     st.pyplot(fig)
 
