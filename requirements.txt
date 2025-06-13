@@ -22,3 +22,4 @@ lime
 scipy>=1.10
 
 openpyxl
+umap-learn
