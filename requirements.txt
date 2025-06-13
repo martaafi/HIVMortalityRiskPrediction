@@ -18,8 +18,5 @@ imbalanced-learn
 # Explainability
 lime
 
-# Optional: Streamlit components (jika kamu pakai)
-streamlit-components
-
 # Avoid version mismatch
 scipy>=1.10
