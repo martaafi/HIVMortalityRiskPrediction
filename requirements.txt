@@ -20,3 +20,5 @@ lime
 
 # Avoid version mismatch
 scipy>=1.10
+
+openpyxl
